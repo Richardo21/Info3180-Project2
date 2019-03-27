@@ -4,9 +4,11 @@ Jinja2 Documentation:    http://jinja.pocoo.org/2/documentation/
 Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
-
+import os
+from werkzeug import secure_filename
 from app import app
-from flask import render_template, request
+from flask import render_template, request,jsonify, session
+from .forms import UploadForm
 
 ###
 # Routing for your application.
@@ -73,6 +75,26 @@ def add_header(response):
 def page_not_found(error):
     """Custom 404 page."""
     return render_template('404.html'), 404
+    
+    
+    
+    
+    
+@app.route('/api/upload ',methods=['POST'])
+
+def upload():
+    
+    form = UploadForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            file = request.files['photo']
+            if file:
+                file=secure_filename(file)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'],
+
+                                                    file))
+                return jsonify(message= 'upload successful',description=form.description,filename=file)
+    return jsonify(errors=form_errors(form))
 
 
 if __name__ == '__main__':
