@@ -32,8 +32,8 @@ def token_authenticate(function):
             return jsonify({'error': 'Access Denied : No Token Found'}), 401
         else:
             try:
-                userdata = jwt.decode(auth.split(" ")[1], app.config['SECRET_KEY'])
-                currentUser = Users.query.filter_by(username = userdata['user']).first()
+                data = jwt.decode(auth.split(" ")[1], app.config['SECRET_KEY'])
+                currentUser = Users.query.filter_by(username = data['user']).first()
                 
                 if currentUser is None:
                     return jsonify({'error': 'Access Denied'}), 401
@@ -51,35 +51,32 @@ def token_authenticate(function):
 @app.route('/api/users/register', methods= ['POST'])
 def register():
     registerForm = RegistrationForm()
-    if (request.method == 'POST') and  registerForm.validate_on_submit() :
+    if (request.method == 'POST') and (registerForm.validate_on_submit()):
+        username = request.registerForm['username']
+        password = request.registerForm['password']
+        firstname = request.registerForm['firstname']
+        lastname = request.registerForm['lastname']
+        email = request.registerForm['email']
+        location = request.registerForm['location']
+        biography = request.registerForm['biography']
+        file = request.files['profile_photo']
+        filename = secure_filename(file.filename)
+        file.save(os.path.join( app.config['UPLOAD_FOLDER'], filename))
+        joined_on = datetime.now()
+
         
-       
-            username = request.registerForm['username']
-            password = request.registerForm['password']
-            firstname =request.registerForm['firstname']
-            lastname =request.registerForm['lastname']
-            email = request.registerForm['email']
-            location = request.registerForm['location']
-            biography = request.registerForm['biography']
-            file = request.files['profile_photo']
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            joined_on = datetime.now()
-    
-            
-            newUser = Users(username= username,password= password,firstname = firstname,lastname= lastname,email= email,location = location,biography= biography,profile_photo=filename,joined_on= joined_on)
-            db.session.add(newUser)
-            db.session.commit()
-            
-            # info = [{'username':username, 'password': password,'firstname':firstname,
-            # 'lastname':lastname, 'email': email, 'location': location, 'biography': biography,
-            # 'photo': filename, 'joined_on': joined_on}]
-           
-            
-            # info = [{'message': "User successfully registered."}]
-            return jsonify(message = "User sucessfully  registered.")
+        newUser = Users(username,password,firstname,lastname,email,location,biography,filename,joined_on)
+        db.session.add(newUser)
+        db.session.commit()
         
-    return jsonify(error = form_errors(registerForm))
+        # info = [{'username':username, 'password': password,'firstname':firstname,
+        # 'lastname':lastname, 'email': email, 'location': location, 'biography': biography,
+        # 'photo': filename, 'joined_on': joined_on}]
+        # return jsonify(info=info)
+        info = [{'message': "User successfully registered."}]
+        
+        return jsonify(info= info)
+    return jsonify(form_errors(registerForm))
 
 #Login API Route
 @app.route('/api/auth/login', methods=['POST'])
@@ -97,8 +94,8 @@ def login():
             info = [{'token': token, 'message': "User successfully logged in."}]
             return jsonify(info = info)
         else:
-            # error = [{'error': "Incorrect username or passowrd."}]
-            return jsonify(error = "Incorrect username or password.")
+            error = [{'error': "Incorrect username or passowrd."}]
+            return jsonify(error = error)
             
     return jsonify(form_errors(loginForm))
 
@@ -120,7 +117,7 @@ def add_post(user_id):
         if (request.method == 'POST') and (creatPost.validate_on_submit()):
             file = request.files['photo']
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['POSTS_UPLOAD_FOLDER'], filename))
+            file.save(os.path.join('./app', app.config['POSTS_UPLOAD_FOLDER'], filename))
             user_id = user_id
             caption = request.form['caption']
             created_on = datetime.now()
@@ -139,14 +136,18 @@ def add_post(user_id):
 def get_post(user_id):
 
         allPosts = Posts.query.filter_by(user_id = user_id).all()
-        posts = []
+        
         if request.method == 'GET':
+            user = Users.query.filter_by(id=user_id).first()
+            user_follower_count = len(Follows.query.filter_by(user_id=user.id).all()) 
+            
+            response = {"status": "ok", "post_data":{"firstname":user.first_name, "lastname": user.last_name, "location": user.location, "joined_on": user.joined_on, "bio": user.biography, "postCount": len(posts), "followers": user_follower_count, "profile_image": os.path.join(app.config['PRO_PIC_UPLOAD_FOLDER'],user.profile_photo), "posts":[]}}
             for post in allPosts:
                 if post.user_id == user_id:
-                    info = {'id': post.id, 'user_id': post.user_id, 'photo': post.photo,
+                    info = {'id': post.id, 'user_id': post.user_id, 'photo': os.path.join(app.config['POSTS_UPLOAD_FOLDER'],post.photo),
                         'caption': post.caption, 'created_on': post.created_on}
-                    posts.append(info)
-                return jsonify(posts = posts)   
+                    response["post_data"]["posts"].append(info)
+                return jsonify(response)  
                 
     
 @app.route('/api/users/<int:user_id>/follow', methods= ['POST'])
@@ -159,14 +160,14 @@ def follow(user_id):
         follower_id = request_payload['follower_id']).first()
         
         if query is not None:
-            info = [{'message': "You are not following that user"}]
+            info = [{'status': 200, 'message': "You are not following that user"}]
             return jsonify(info = info)
         
         follow = Follows(request_payload['user_id'], request_payload['follower_id'])
         db.session.add(follow)
         db.session.commit()
 
-        return jsonify(message = "You are now following that user.")
+        return jsonify(status= 201, message = "You are now following that user.")
         
     
 @app.route('/api/posts', methods = ['GET'])

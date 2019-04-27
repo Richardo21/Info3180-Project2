@@ -1,3 +1,112 @@
 body {
     padding-top: 5rem;
+    background-color: rgb(247, 237, 225);
+}
+
+#navbar-items{
+    position: relative;
+    left: 800px;
+}
+
+#local{
+    margin-top:3%;
+}
+
+ .container{ 
+   
+    margin-top: 85px;
+} 
+
+.form-container{
+    background-color: white;
+    padding: 70px;
+    border-radius: 5px;
+    border: 1px solid grey;
+    margin: auto;
+    width: 50%;
+}
+.form-title{
+    position: relative;
+    left: 285px;
+}
+.right-component{
+    background-color: white;
+    float: right;
+    width: 50%;
+    height: 400px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px 1px grey;
+    border: 1px solid grey;
+    padding: 30px;
+}
+
+.left-component{
+    /* background-color: white; */
+    float: left;
+    width: 49%;
+}
+
+.homePagePhoto{
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px 1px grey;
+}
+
+.styleHeading{
+    text-align: center;
+    line-height: 1.6;
+    border-bottom: 2px solid rgb(228, 224, 224);
+    font-family:Brush Script MT, Brush Script Std ,cursive;
+    font-weight: bold;
+
+}
+
+.styleImg{
+    position: relative;
+    top: 38px;
+    left: 120px;
+
+}
+
+.btns{
+   position: relative;
+   left: 30px;
+}
+
+.grid{
+    display: grid;
+    grid-template-columns: 80% 20%;
+}
+
+
+#leftside{
+    padding: inherit;
+    margin: inherit;
+}
+
+#newpostbtn{
+    padding-left:70px;
+    padding-right: 150px;
+    
+}
+.gridpic{
+    display: grid;
+    grid-template-columns:33.333%;
+}
+#firstcontainer{
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    border: 1px solid grey;
+    margin: 3px;
+    width: 100%
+}
+
+#photogram{
+    font-family:Brush Script MT, Brush Script Std ,cursive;
+    margin-left: 5px;
+    font-size:36px;
+}
+.pic{
+    height: 80px;
+    width: 100px;
 }
