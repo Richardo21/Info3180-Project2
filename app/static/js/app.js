@@ -160,7 +160,8 @@ const AllPost= Vue.component('allpost',{
     <div>
     <div class="grid">
     <div></div>
-    <div></div>
+    <div>
+    </div>
     </div>
     </div>
     `

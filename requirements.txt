@@ -9,10 +9,10 @@ bcrypt==3.1.4
 Werkzeug==0.14.1
 WTForms==2.2.1
 # Flask-Login
-Flask-Script
-Flask-Migrate
-Flask-SQLAlchmey
-gunicorn
+Flask-Script==2.0.6
+Flask-Migrate==2.1.1
+Flask-SQLAlchemy==2.3.2
+gunicorn==19.6.0
 Flask-JWT
 PyJWT==1.6.1
 

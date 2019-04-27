@@ -10,7 +10,7 @@ csrf = CSRFProtect(app)
 # bcrypt = Bcrypt(app)
 
 app.config['SECRET_KEY'] = 'v\xf9\xf7\x11\x13\x18\xfaMYp\xed_\xe8\xc9w\x06\x8e\xf0f\xd2\xba\xfd\x8c\xda'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ekoqkionryislu:b7ba1a2658509cc1ed356713e7f9d9847cbc0c52d2a686a9f8e22c76ddac799d@ec2-54-225-76-136.compute-1.amazonaws.com:5432/d6s9k0onloud6q'
+app.config['SQLALCHEMY_DATABASE_URI'] =  'postgres://dsobtevklbcrwn:9bdceffb0c450af251f49b61a602a143c8fa1c9984629a73ce09c0984f0101ba@ec2-54-197-234-117.compute-1.amazonaws.com:5432/d7dkif2v6s8cde'
 
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql: //infoproj2:info3180@localhost/infoproj2'     
 
